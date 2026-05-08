@@ -1,10 +1,8 @@
 import requests
 import os
-from google_play_scraper import Sort, search
-# ملاحظة: سنستخدم مكتبة requests لجلب بيانات آبل مباشرة لأنها أسرع وأدق للجديد
-import datetime
+from google_play_scraper import search
 
-# إعدادات التليجرام
+# إعدادات التليجرام - تأكد أنك وضعتها في Secrets بجيت هاب
 TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
 MEMORY_FILE = "talal_test.txt"
@@ -19,7 +17,7 @@ def save_to_memory(app_id):
     with open(MEMORY_FILE, 'a') as f:
         f.write(app_id + '\n')
 
-def send_telegram(title, developer, link, icon, store_name):
+def send_telegram(title, developer, link, store_name):
     message = (
         f"🚀 <b>تطبيق سعودي جديد رصده الرادار!</b>\n"
         f"━━━━━━━━━━━━━━━━━━\n"
@@ -34,26 +32,33 @@ def send_telegram(title, developer, link, icon, store_name):
         "chat_id": CHAT_ID,
         "text": message,
         "parse_mode": "HTML",
-        "reply_markup": {"inline_keyboard": [[{"text": "📥 تحميل التطبيق", "url": link}]]}
+        "reply_markup": {
+            "inline_keyboard": [[{"text": "📥 تحميل التطبيق", "url": link}]]
+        }
     }
     requests.post(url, json=payload)
 
 def hunt_android():
     print("جاري فحص أندرويد...")
-    # كلمات بحث قوية لصيد التطبيقات المحلية
     keywords = ["السعودية", "SAUDI", "توصيل", "المدينة المنورة", "متجر"]
     for kw in keywords:
-        results = search(kw, lang='ar', country='sa', n_hits=10, sort=Sort.NEWEST)
-        for app in results:
-            app_id = app['appId']
-            if not is_sent(app_id):
-                send_telegram(app['title'], app['developer'], f"https://play.google.com/store/apps/details?id={app_id}", app['icon'], "Google Play")
-                save_to_memory(app_id)
+        try:
+            # تم حذف 'sort' لتجنب الخطأ الذي ظهر في الصورة
+            results = search(kw, lang='ar', country='sa', n_hits=10)
+            for app in results:
+                app_id = app['appId']
+                if not is_sent(app_id):
+                    title = app.get('title', 'بدون اسم')
+                    developer = app.get('developer', 'مطور غير معروف')
+                    link = f"https://play.google.com/store/apps/details?id={app_id}"
+                    send_telegram(title, developer, link, "Google Play")
+                    save_to_memory(app_id)
+        except Exception as e:
+            print(f"خطأ في بحث أندرويد للكلمة {kw}: {e}")
 
 def hunt_apple():
     print("جاري فحص آبل ستور...")
-    # نبحث في آبل عن طريق الـ RSS Feed الرسمي حقهم للجديد في السعودية
-    # هذا الرابط يجلب "أحدث" التطبيقات التي نزلت في المتجر السعودي
+    # البحث في أحدث التطبيقات المضافة للمتجر السعودي
     url = "https://itunes.apple.com/sa/rss/newapplications/limit=20/json"
     try:
         response = requests.get(url).json()
@@ -64,12 +69,14 @@ def hunt_apple():
                 title = entry['im:name']['label']
                 developer = entry['im:artist']['label']
                 link = entry['link']['attributes']['href']
-                icon = entry['im:image'][2]['label']
-                send_telegram(title, developer, link, icon, "App Store")
+                send_telegram(title, developer, link, "App Store")
                 save_to_memory(app_id)
-    except:
-        print("خطأ في جلب بيانات آبل")
+    except Exception as e:
+        print(f"خطأ في جلب بيانات آبل: {e}")
 
 if __name__ == "__main__":
-    hunt_android()
-    hunt_apple()
+    if not TOKEN or not CHAT_ID:
+        print("خطأ: تأكد من إضافة TELEGRAM_TOKEN و CHAT_ID في Secrets")
+    else:
+        hunt_android()
+        hunt_apple()
