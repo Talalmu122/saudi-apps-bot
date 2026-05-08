@@ -31,7 +31,7 @@ def send_telegram(token, chat_id, name, artist, app_url, icon_url, store_type):
 def monitor():
     token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('CHAT_ID') 
-    last_id_file = "last_apps_ids.txt"
+    last_id_file = "talal_test.txt"
     
     old_ids = set()
     if os.path.exists(last_id_file):
