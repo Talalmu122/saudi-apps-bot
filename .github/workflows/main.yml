@@ -1,0 +1,22 @@
+name: Check Apps Hourly
+on:
+  schedule:
+    - cron: '0 * * * *' # يشتغل كل ساعة بالضبط
+  workflow_dispatch: # زر لتشغيله يدوياً متى ما بغيت
+
+jobs:
+  run_bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - set up python:
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - install:
+        run: pip install -r requirements.txt
+      - run_script:
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python main.py
