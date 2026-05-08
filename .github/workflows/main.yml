@@ -1,33 +1,36 @@
-name: Saudi Apps Radar
+name: Apps Hunter SA
+
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 * * * *' # يشتغل كل ساعة
   workflow_dispatch:
+
 jobs:
-  run_bot:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Cache App IDs
-        uses: actions/cache@v3
-        with:
-          path: last_apps_ids.txt
-          key: app-ids-cache-${{ github.run_id }}
-          restore-keys: |
-            app-ids-cache-
+        uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
           python-version: '3.9'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install requests
 
-      - name: Run script
+      - name: Run Apps Hunter
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: python main.py
+
+      - name: Save memory (Keep track of sent apps)
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add last_apps_ids.txt || echo "No changes"
+          git commit -m "Update sent apps list" || echo "No changes to commit"
+          git push
+
