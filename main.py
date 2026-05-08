@@ -1,71 +1,75 @@
 import requests
 import os
-import sys
-import google_play_scraper # استدعاء شامل لتجنب أخطاء المكتبة
+from google_play_scraper import Sort, search
+# ملاحظة: سنستخدم مكتبة requests لجلب بيانات آبل مباشرة لأنها أسرع وأدق للجديد
+import datetime
 
-def send_telegram(token, chat_id, name, artist, app_url, icon_url, store_type):
-    # تنسيق الرسالة بشكل احترافي للقناة
+# إعدادات التليجرام
+TOKEN = os.getenv('TELEGRAM_TOKEN')
+CHAT_ID = os.getenv('CHAT_ID')
+MEMORY_FILE = "talal_test.txt"
+
+def is_sent(app_id):
+    if not os.path.exists(MEMORY_FILE):
+        return False
+    with open(MEMORY_FILE, 'r') as f:
+        return app_id in f.read()
+
+def save_to_memory(app_id):
+    with open(MEMORY_FILE, 'a') as f:
+        f.write(app_id + '\n')
+
+def send_telegram(title, developer, link, icon, store_name):
     message = (
-        f"<b>📱 تطبيق جديد تم رصده!</b>\n"
+        f"🚀 <b>تطبيق سعودي جديد رصده الرادار!</b>\n"
         f"━━━━━━━━━━━━━━━━━━\n"
-        f"<b>📦 الاسم:</b> {name}\n"
-        f"<b>👨‍💻 المطور:</b> {artist}\n"
-        f"<b>🏪 المتجر:</b> {store_type}\n"
+        f"<b>📱 التطبيق:</b> {title}\n"
+        f"<b>🏢 المطور:</b> {developer}\n"
+        f"<b>🏪 المتجر:</b> {store_name}\n"
         f"━━━━━━━━━━━━━━━━━━\n"
-        f"📍 <i>تنبيه آلي بواسطة رادار طلال التقني</i>"
+        f"📍 <i>رادار طلال للبرامج السعودية</i>"
     )
-    
-    url = f"https://api.telegram.org/bot{token}/sendPhoto"
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     payload = {
-        "chat_id": chat_id,
-        "photo": icon_url,
-        "caption": message,
+        "chat_id": CHAT_ID,
+        "text": message,
         "parse_mode": "HTML",
-        "reply_markup": {"inline_keyboard": [[{"text": "📥 تحميل التطبيق الآن", "url": app_url}]]}
+        "reply_markup": {"inline_keyboard": [[{"text": "📥 تحميل التطبيق", "url": link}]]}
     }
+    requests.post(url, json=payload)
+
+def hunt_android():
+    print("جاري فحص أندرويد...")
+    # كلمات بحث قوية لصيد التطبيقات المحلية
+    keywords = ["السعودية", "SAUDI", "توصيل", "المدينة المنورة", "متجر"]
+    for kw in keywords:
+        results = search(kw, lang='ar', country='sa', n_hits=10, sort=Sort.NEWEST)
+        for app in results:
+            app_id = app['appId']
+            if not is_sent(app_id):
+                send_telegram(app['title'], app['developer'], f"https://play.google.com/store/apps/details?id={app_id}", app['icon'], "Google Play")
+                save_to_memory(app_id)
+
+def hunt_apple():
+    print("جاري فحص آبل ستور...")
+    # نبحث في آبل عن طريق الـ RSS Feed الرسمي حقهم للجديد في السعودية
+    # هذا الرابط يجلب "أحدث" التطبيقات التي نزلت في المتجر السعودي
+    url = "https://itunes.apple.com/sa/rss/newapplications/limit=20/json"
     try:
-        requests.post(url, json=payload)
-    except Exception as e:
-        print(f"Error sending to Telegram: {e}")
-
-def monitor():
-    token = os.getenv('TELEGRAM_TOKEN')
-    chat_id = os.getenv('CHAT_ID') 
-    last_id_file = "talal_test.txt"
-    
-    old_ids = set()
-    if os.path.exists(last_id_file):
-        with open(last_id_file, "r") as f:
-            old_ids = set(f.read().splitlines())
-
-    current_ids = set()
-
-    try:
-        # --- فحص متجر آبل ---
-        apple_url = "https://rss.applemarketingtools.com/api/v2/sa/apps/top-free/10/apps.json"
-        apple_res = requests.get(apple_url).json()
-        for app in apple_res['feed']['results']:
-            aid = f"apple_{app['id']}"
-            current_ids.add(aid)
-            if aid not in old_ids:
-                icon = app['artworkUrl100'].replace('100x100bb', '512x512bb')
-                send_telegram(token, chat_id, app['name'], app['artistName'], app['url'], icon, "Apple Store 🍏")
-
-        # --- فحص متجر جوجل بلاي ---
-        google_results = google_play_scraper.search("Saudi Arabia", lang="ar", country="sa", n_hits=10)
-        for g_app in google_results:
-            gid = f"google_{g_app['appId']}"
-            current_ids.add(gid)
-            if gid not in old_ids:
-                g_url = f"https://play.google.com/store/apps/details?id={g_app['appId']}"
-                send_telegram(token, chat_id, g_app['title'], g_app.get('developer', 'N/A'), g_url, g_app['icon'], "Google Play 🤖")
-
-        # حفظ المعرفات للمرة القادمة
-        with open(last_id_file, "w") as f:
-            f.write("\n".join(current_ids))
-            
-    except Exception as e:
-        print(f"Main Error: {e}")
+        response = requests.get(url).json()
+        entries = response.get('feed', {}).get('entry', [])
+        for entry in entries:
+            app_id = entry['id']['attributes']['im:id']
+            if not is_sent(app_id):
+                title = entry['im:name']['label']
+                developer = entry['im:artist']['label']
+                link = entry['link']['attributes']['href']
+                icon = entry['im:image'][2]['label']
+                send_telegram(title, developer, link, icon, "App Store")
+                save_to_memory(app_id)
+    except:
+        print("خطأ في جلب بيانات آبل")
 
 if __name__ == "__main__":
-    monitor()
+    hunt_android()
+    hunt_apple()
