@@ -1,41 +1,44 @@
-name: Apps Hunter SA
+name: Saudi Apps Radar
 
 on:
   schedule:
-    - cron: '0 * * * *' # يشتغل كل ساعة
-  workflow_dispatch:
+    - cron: '0 * * * *' # يشتغل تلقائياً كل ساعة
+  workflow_dispatch: # يسمح لك بتشغيله يدوياً متى ما تحب
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # إضافة صلاحية الكتابة للمستودع (مهم جداً!)
+    
+    # هذه الصلاحية ضرورية جداً ليتمكن البوت من حفظ الذاكرة
     permissions:
       contents: write
       
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
       - name: Install dependencies
         run: |
-          pip install requests
-          pip install google-play-scraper
+          pip install requests google-play-scraper
 
-      - name: Run Apps Hunter
+      - name: Run Radar
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: python main.py
 
-      - name: Save memory (Keep track of sent apps)
+      - name: Sync Memory (Prevent Duplicates)
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
+          # التأكد من وجود ملف الذاكرة حتى لا يفشل الكود
+          touch talal_test.txt 
           git add talal_test.txt
-          git commit -m "Update memory: talal_test.txt" || echo "No changes to commit"
+          # سيقوم برفع التعديلات فقط إذا وجد تطبيقات جديدة تم رصدها
+          git commit -m "Update memory: added new spotted apps" || echo "No new apps to save"
           git push
