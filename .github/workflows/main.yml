@@ -1,16 +1,22 @@
 name: Saudi Apps Radar
-
 on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
-
 jobs:
   run_bot:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Cache App IDs
+        uses: actions/cache@v3
+        with:
+          path: last_apps_ids.txt
+          key: app-ids-cache-${{ github.run_id }}
+          restore-keys: |
+            app-ids-cache-
 
       - name: Set up Python
         uses: actions/setup-python@v4
