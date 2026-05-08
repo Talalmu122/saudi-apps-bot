@@ -1,8 +1,8 @@
-name: Check Apps Hourly
+name: Saudi Apps Radar
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
