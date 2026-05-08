@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # إضافة صلاحية الكتابة للمستودع (مهم جداً!)
+    permissions:
+      contents: write
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -18,7 +22,9 @@ jobs:
           python-version: '3.9'
 
       - name: Install dependencies
-        run: pip install requests
+        run: |
+          pip install requests
+          pip install google-play-scraper
 
       - name: Run Apps Hunter
         env:
@@ -30,7 +36,6 @@ jobs:
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git add last_apps_ids.txt || echo "No changes"
-          git commit -m "Update sent apps list" || echo "No changes to commit"
+          git add talal_test.txt
+          git commit -m "Update memory: talal_test.txt" || echo "No changes to commit"
           git push
-
