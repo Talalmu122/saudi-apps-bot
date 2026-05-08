@@ -1,7 +1,7 @@
 import requests
 import os
 import sys
-from google_play_scraper import Sort, content_selection
+import google_play_scraper # استدعاء المكتبة بشكل كامل لتجنب أخطاء Import
 
 def send_telegram(token, chat_id, name, artist, app_url, icon_url, store_type):
     message = (
@@ -37,7 +37,7 @@ def monitor():
     new_ids = []
 
     try:
-        # --- متجر آبل ---
+        # --- فحص متجر آبل ---
         apple_url = "https://rss.applemarketingtools.com/api/v2/sa/apps/top-free/10/apps.json"
         apple_res = requests.get(apple_url).json()
         for app in apple_res['feed']['results']:
@@ -47,24 +47,27 @@ def monitor():
                 icon = app['artworkUrl100'].replace('100x100bb', '512x512bb')
                 send_telegram(token, chat_id, app['name'], app['artistName'], app['url'], icon, "Apple Store 🍏")
 
-        # --- متجر جوجل بلاي (التصنيف الجديد) ---
-        # بنستخدم طريقة البحث عن أحدث التطبيقات المجانية في السعودية
-        from google_play_scraper import search
+        # --- فحص متجر جوجل بلاي (الطريقة المضمونة) ---
+        # بنستخدم دالة البحث العامة لأنها الأكثر استقراراً
+        google_results = google_play_scraper.search(
+            "Saudi Arabia",
+            lang="ar",
+            country="sa",
+            n_hits=10
+        )
         
-        # بنبحث بكلمة "السعودية" أو نستخدم تصنيف التطبيقات الجديدة
-        google_apps = search("السعودية", lang="ar", country="sa", n_hits=10)
-        
-        for g_app in google_apps:
+        for g_app in google_results:
             gid = f"google_{g_app['appId']}"
             new_ids.append(gid)
             if gid not in old_ids:
-                send_telegram(token, chat_id, g_app['title'], g_app.get('developer', 'N/A'), f"https://play.google.com/store/apps/details?id={g_app['appId']}", g_app['icon'], "Google Play 🤖")
+                g_url = f"https://play.google.com/store/apps/details?id={g_app['appId']}"
+                send_telegram(token, chat_id, g_app['title'], g_app.get('developer', 'N/A'), g_url, g_app['icon'], "Google Play 🤖")
 
-        # حفظ المعرفات
+        # حفظ المعرفات للمرة القادمة
         with open(last_id_file, "w") as f:
             f.write("\n".join(new_ids))
             
-        print("Done successfully!")
+        print("Success: تم فحص المتجرين بنجاح!")
 
     except Exception as e:
         print(f"Main Error: {e}")
