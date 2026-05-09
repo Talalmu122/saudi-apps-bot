@@ -176,3 +176,7 @@ ee.mtakso.client
 com.stedor.instashop
 com.pulselive.spl
 gov.mep.datasaudi
+com.mi.global.shop
+com.playspare.supermarket.store.simulator
+com.salla.saudistore2020
+com.birdydogstudio.city.shop.supermarket.simulator
