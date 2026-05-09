@@ -180,3 +180,4 @@ com.mi.global.shop
 com.playspare.supermarket.store.simulator
 com.salla.saudistore2020
 com.birdydogstudio.city.shop.supermarket.simulator
+sa.QuranComplex.QuranHafs
