@@ -174,3 +174,5 @@ com.alibaba.aliexpresshd
 com.rabbit.mart
 ee.mtakso.client
 com.stedor.instashop
+com.pulselive.spl
+gov.mep.datasaudi
