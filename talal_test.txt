@@ -294,3 +294,4 @@ sa.QuranComplex.QuranHafs
 com.ikea.ksa.kompis
 com.mhdaka.saudidrivingtestdallah
 com.toters.customer
+idle.shopping.megastore
