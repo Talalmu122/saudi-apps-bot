@@ -291,3 +291,4 @@ sa.QuranComplex.QuranHafs
 6766483713
 6761950866
 6762459453
+com.ikea.ksa.kompis
