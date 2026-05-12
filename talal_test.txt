@@ -405,3 +405,4 @@ idle.shopping.megastore
 6767189695
 6767564777
 com.shopify.arrive
+com.mrsool
