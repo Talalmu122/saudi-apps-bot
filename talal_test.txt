@@ -518,3 +518,4 @@ com.glovo
 6768595045
 6761163008
 6768632951
+com.deliveroo.orderapp
