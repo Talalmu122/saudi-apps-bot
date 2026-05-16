@@ -628,3 +628,4 @@ com.deliveroo.orderapp
 6761279185
 6758411315
 com.vatrin.seller
+com.sankuai.sailor.afooddelivery
