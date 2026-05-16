@@ -629,3 +629,4 @@ com.deliveroo.orderapp
 6758411315
 com.vatrin.seller
 com.sankuai.sailor.afooddelivery
+com.saudi.driving.license.ksa.dallah
