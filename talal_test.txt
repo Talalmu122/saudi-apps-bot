@@ -627,3 +627,4 @@ com.deliveroo.orderapp
 6757105582
 6761279185
 6758411315
+com.vatrin.seller
