@@ -962,3 +962,6 @@ com.digix.almithaly_app
 6769777037
 6768188035
 6766074528
+com.zzkko
+com.shopmaster.master
+com.blashstore.freestore
