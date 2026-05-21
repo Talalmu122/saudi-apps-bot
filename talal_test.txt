@@ -965,3 +965,4 @@ com.digix.almithaly_app
 com.zzkko
 com.shopmaster.master
 com.blashstore.freestore
+com.noon.buyerapp
