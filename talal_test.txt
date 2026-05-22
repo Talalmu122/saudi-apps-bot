@@ -968,3 +968,4 @@ com.blashstore.freestore
 com.noon.buyerapp
 com.manage.retail.store
 com.lemon.lvoverseas
+com.nextwo.the_chefz
