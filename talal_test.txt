@@ -1190,3 +1190,4 @@ com.salla.ruhuc
 6766032580
 6767272342
 6772147076
+com.skytrendstore.skystore
