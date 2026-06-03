@@ -1742,3 +1742,4 @@ com.sankuai.sailor.courier
 6766087098
 6774211470
 6774185184
+com.bakka.moshaf_madinah_mojawad
