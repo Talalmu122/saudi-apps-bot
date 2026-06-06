@@ -1854,3 +1854,4 @@ com.kurdi.qadir.quranmp3
 6775610262
 6769019229
 6762428813
+com.islamic_university.iu_app
