@@ -1965,3 +1965,4 @@ com.islamic_university.iu_app
 6773173935
 6774860046
 6777390488
+com.saudimap.apps
