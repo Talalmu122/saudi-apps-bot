@@ -1966,3 +1966,4 @@ com.islamic_university.iu_app
 6774860046
 6777390488
 com.saudimap.apps
+com.bubadu.supermarket
