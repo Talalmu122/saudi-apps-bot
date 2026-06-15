@@ -2407,3 +2407,4 @@ com.bubadu.supermarket
 6779824053
 6778629626
 6760114678
+my.perfect.shop.simulation
