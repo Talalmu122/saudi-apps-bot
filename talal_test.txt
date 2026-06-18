@@ -2517,3 +2517,5 @@ my.perfect.shop.simulation
 6778363658
 6780144362
 6781198328
+com.spa.was
+com.salla.football112
