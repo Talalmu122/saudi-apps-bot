@@ -3180,3 +3180,4 @@ com.etsy.android
 6777049821
 6784447661
 6781214101
+com.ig.supermarket.simulator
