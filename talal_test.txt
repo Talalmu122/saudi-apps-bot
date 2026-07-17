@@ -3624,3 +3624,5 @@ com.kfc.ksa
 com.multibrains.taxi.passenger.kayantaxi
 sa.gov.moi
 com.amex.sa
+com.saqsteam.saudi.drift.x
+com.snb.alahlimobile
