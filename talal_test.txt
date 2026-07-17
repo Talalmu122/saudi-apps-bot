@@ -3620,3 +3620,7 @@ ac.tlb.tlbac
 com.empg.olxsa
 app.id630045.android
 com.gmlstore.app
+com.kfc.ksa
+com.multibrains.taxi.passenger.kayantaxi
+sa.gov.moi
+com.amex.sa
