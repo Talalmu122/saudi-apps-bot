@@ -3627,3 +3627,4 @@ com.amex.sa
 com.saqsteam.saudi.drift.x
 com.snb.alahlimobile
 com.elyonko.shop
+com.haraj.app
