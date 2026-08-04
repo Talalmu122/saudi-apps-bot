@@ -3629,3 +3629,4 @@ com.snb.alahlimobile
 com.elyonko.shop
 com.haraj.app
 com.saudieng.sce
+com.zainsa.b2c
