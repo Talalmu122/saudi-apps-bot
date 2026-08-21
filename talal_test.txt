@@ -3636,3 +3636,12 @@ com.zainsa.b2c
 com.aliKH.matgar
 6787436694
 6788507243
+com.saudisale
+com.mediapark.rbm
+sa.sephora.sephorasa
+com.kudu.androidapp
+com.arabius.ksa.game
+hk.easyvan.app.client
+com.alahdal.maha
+com.realmestore.app
+com.playinfinity.game.mysupermarket
