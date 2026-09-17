@@ -3652,3 +3652,4 @@ com.chat.saudidating
 com.indra.haramain.pro
 ae.gwu.matjery
 com.diraq
+com.samsung.ecomm.global.gbr
