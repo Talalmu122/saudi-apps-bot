@@ -3655,3 +3655,6 @@ com.diraq
 com.samsung.ecomm.global.gbr
 com.starbucks.sa
 com.omar1985.Salaries
+com.saudiarabianewsfrmv.app
+com.familyjostore.magecomp
+com.matgercoins.glory
