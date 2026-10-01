@@ -3772,3 +3772,4 @@ com.mirum.Toyota.alj
 jobs.at.saudi23
 com.mpa.so3ody
 com.saudi.coupon
+com.brewgames.shoppingmalladventure
