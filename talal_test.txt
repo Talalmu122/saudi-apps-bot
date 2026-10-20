@@ -3779,3 +3779,5 @@ com.da5m.app
 com.SaudiMark.app
 com.seoudi.app
 com.ok.shopsa
+com.deadsimpleapps.sar
+com.google.android.googlequicksearchbox
